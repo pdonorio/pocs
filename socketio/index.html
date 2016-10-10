@@ -1,0 +1,35 @@
+<!doctype html>
+<html ng-app="myApp">
+    <head>
+        <title>PoC</title>
+    </head>
+    <body>
+        <p>
+            <ol>
+                <li> Open web console inside your browser. </li>
+                <li>
+                    head to
+                    <a href="http://localhost:7778/#dataexplorer">rethinkdb dashboard</a>
+                    and run:<br>
+                    <code>
+                        r.db('test').table('subscriptions').insert({test: 'it works!'})
+                    </code>
+                </li>
+                <li>
+                    finally come back here to see if you received.
+                </li>
+            </ol>
+        </p>
+
+        <div ng-controller="MyCtrl" ng-cloak>
+            Messages array:<br>
+            {{messages}}
+        </div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/static/angular/angular.min.js"></script>
+        <script src="/static/angular-socket-io/socket.min.js"></script>
+        <script src="/js/app.js"></script>
+
+    </body>
+</html>
