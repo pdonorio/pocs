@@ -25,7 +25,7 @@ docker-compose exec backend uwsgitop localhost:9191
 
 To query the server from the client container:
 ```bash
-docker-compose exec client http GET api/hello
+docker-compose exec client http GET http://domain/api/hello
 ```
 
 ---

@@ -1,4 +1,11 @@
 
+##############################
+# Backend with Flask + uWSGI socket + nginx on that socket
+# stack:
+# - Flask has no port (main could be with app.run in another file)
+# - uWSGI creates a socket
+# - nginx reads uWSGI socket with the uwsgi_pass extension and listens on port 8080
+
 backend:
   image: pdonorio/py3apil
   environment:
@@ -13,20 +20,30 @@ backend:
     - ./nginx_internal:/etc/nginx/conf.d
     - ./app:/code
 
-# proxy:
-#   image: nginx
-#   hostname: iamaproxy
-#   links:
-#     - backend:api
-#   volumes:
-#     - ./nginx_proxy:/etc/nginx/conf.d
-#   ports:
-#     - 80:80
+##############################
+# The proxy which decides to redirect requests
+# based on URLs received.
+# Redirects /api to backend
+# Listens on port 80
+# Should implements SSL on 443
+
+proxy:
+  image: nginx
+  hostname: iamaproxy
+  links:
+    - backend:api
+  volumes:
+    - ./nginx_proxy:/etc/nginx/conf.d
+  ports:
+    - 80:80
+
+##############################
+# A simple client to query APIs
 
 client:
   image: eudatb2safe/apiclient
   hostname: flaskclient
   command: sleep 1234567890
   links:
-    - backend:api
-    # - proxy:proxy
+    # - backend:api
+    - proxy:domain

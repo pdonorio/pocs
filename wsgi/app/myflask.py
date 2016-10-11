@@ -3,7 +3,9 @@
 from flask import Flask
 app = Flask('poc')
 
+API_PREFIX = '/api'
 
-@app.route('/hello')
+
+@app.route(API_PREFIX + '/hello')
 def hello():
     return "Hello, World!"
