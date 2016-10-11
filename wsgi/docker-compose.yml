@@ -1,25 +1,32 @@
 
 backend:
   image: pdonorio/py3apil
-  # command: sleep infinity
-  command: uwsgi --emperor /etc/uwsgi/emperor.ini
+  environment:
+    # - UWSGI_EMPEROR=/etc/uwsgi/emperor.ini
+    - UWSGI_MASTER=/tmp/uwsgi/starter.ini
+    - NGINX_ACTIVE=true
   hostname: restapi
   volumes:
+    # - ./wsgi:/etc/uwsgi
+    - ./wsgi:/tmp/uwsgi
+    - nginx_empty_sites:/etc/nginx/sites-enabled
+    - ./nginx_internal:/etc/nginx/conf.d
     - ./app:/code
-    - ./etc:/etc/uwsgi
-    # - pocs_virtualenv:/srv
-  ports:
-    - 3031:3031
-
-client:
-  image: eudatb2safe/apiclient
-  command: sleep 1234567890
-  links:
-    - backend:api
 
 # proxy:
 #   image: nginx
+#   hostname: iamaproxy
 #   links:
 #     - backend:api
+#   volumes:
+#     - ./nginx_proxy:/etc/nginx/conf.d
 #   ports:
 #     - 80:80
+
+client:
+  image: eudatb2safe/apiclient
+  hostname: flaskclient
+  command: sleep 1234567890
+  links:
+    - backend:api
+    # - proxy:proxy
