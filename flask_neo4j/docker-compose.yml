@@ -1,0 +1,40 @@
+
+version: '3'
+
+services:
+  graphdb:
+    image: neo4j:3.1
+    hostname: ${GRAPHDB_HOST}
+    environment:
+      NEO4J_AUTH: neo4j/${GRAPHDB_PASSWORD}
+    # # If you want to see data in the graph
+    # ports:
+    #   - 7474:7474
+    networks:
+      dbnet:
+        aliases:
+          - ${GRAPHDB_HOST}
+  flasker:
+    build: ./flaskimage
+    command: flask run --host=0.0.0.0
+    # command: sleep 1234567890 # DEBUG
+    volumes:
+      - .:/code
+    working_dir: /code
+    environment:
+      # Set the app configuration
+      FLASK_APP: run.py
+      FLASK_DEBUG: 1
+      # Give secrets to this app
+      HOST: ${GRAPHDB_HOST}
+      PW: ${GRAPHDB_PASSWORD}
+    ports:
+      - 8080:5000
+    networks:
+      - dbnet
+    depends_on:
+      - graphdb
+
+networks:
+  dbnet:
+    driver: bridge
