@@ -1,0 +1,28 @@
+
+version: "2.0"
+# https://docs.docker.com/compose/compose-file
+
+services:
+
+  master:
+    image: rethinkdb
+    command: rethinkdb --bind all
+    networks:
+      - internal
+    ports:
+      - "3000:8080"
+  slave:
+    image: rethinkdb
+    command: rethinkdb --join master:29015 --bind all
+    networks:
+      - internal
+    depends_on:
+      - master
+
+# volumes:
+#   rethinkdbdata:
+#     driver: local
+
+networks:
+  internal:
+    driver: bridge
