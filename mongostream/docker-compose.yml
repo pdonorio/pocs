@@ -1,0 +1,15 @@
+version: '3.6'
+services:
+  db:
+    # command: sleep 1234567890
+    command: --config /etc/mongod.conf
+    image: mongo:4.0.0-rc6-xenial
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+      - ./data:/var/repl-data
+  py:
+    image: python:3.6.5-alpine3.7
+    command: sleep 1234567890
+    # working_dir: /code
+    # volumes:
+    #   - ./code:/code
