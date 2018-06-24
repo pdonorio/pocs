@@ -1,9 +1,10 @@
 version: '3.6'
 services:
   db:
+    image: mongo:3.7.9-xenial
+    # image: mongo:4.0.0-rc6-xenial
     # command: sleep 1234567890
     command: --config /etc/mongod.conf
-    image: mongo:4.0.0-rc6-xenial
     volumes:
       - ./conf/mongod.conf:/etc/mongod.conf
       - ./data:/var/repl-data
